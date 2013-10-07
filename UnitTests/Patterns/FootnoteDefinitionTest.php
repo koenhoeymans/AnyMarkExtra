@@ -36,7 +36,7 @@ class AnyMarkExtra_Patterns_FootnoteDefinitionTest extends \AnyMark\UnitTests\Su
 [^this]: that
 
 paragraph';
-		$callback = $this->eventMapper->getCallback('AnyMark\\Events\\BeforeParsing');
+		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
 		$event = new \AnyMark\Events\BeforeParsing($text);
 		$callback($event);
 
@@ -120,7 +120,7 @@ paragraph';
     bar
 
 paragraph';
-		$callback = $this->eventMapper->getCallback('AnyMark\\Events\\BeforeParsing');
+		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
 		$event = new \AnyMark\Events\BeforeParsing($text);
 		$callback($event);
 
@@ -182,7 +182,7 @@ paragraph';
 		$div->append($li);
 		$li->append($div->createElement('p'));
 
-		$callback = $this->eventMapper->getCallback('AnyMark\\Events\\BeforeParsing');
+		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
 		$event = new \AnyMark\Events\BeforeParsing($text);
 		$callback($event);
 
@@ -204,7 +204,7 @@ paragraph';
 		$text = 'paragraph
 
 [^1$^!"\']: Bar!';
-		$callback = $this->eventMapper->getCallback('AnyMark\\Events\\BeforeParsing');
+		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
 		$event = new \AnyMark\Events\BeforeParsing($text);
 		$callback($event);
 
