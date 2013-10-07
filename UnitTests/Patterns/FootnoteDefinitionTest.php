@@ -180,7 +180,9 @@ paragraph';
 		$li->setAttribute('footnoteDef', 'true');
 		$li->setAttribute('id', 'fn:foo');
 		$div->append($li);
-		$li->append($div->createElement('p'));
+		$p = $div->createElement('p');
+		$p->append($div->createText('bar'));
+		$li->append($p);
 
 		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
 		$event = new \AnyMark\Events\BeforeParsing($text);
@@ -191,7 +193,7 @@ paragraph';
 		$callback($event);
 
 		$this->assertEquals(
-			'<div><p><sup id="fnref:foo"><a href="#fn:foo" rel="footnote">foo</a></sup></p><div class="footnotes"><hr /><ol><li id="fn:foo"><p>&#160;<a href="#fnref:foo" rev="footnote">&#8617;</a></p></li></ol></div></div>',
+			'<div><p><sup id="fnref:foo"><a href="#fn:foo" rel="footnote">foo</a></sup></p><div class="footnotes"><hr /><ol><li id="fn:foo"><p>bar&#160;<a href="#fnref:foo" rev="footnote">&#8617;</a></p></li></ol></div></div>',
 			$div->toString()
 		);
 	}
