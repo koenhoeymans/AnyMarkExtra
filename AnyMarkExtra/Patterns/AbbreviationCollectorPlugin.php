@@ -41,7 +41,7 @@ class AbbreviationCollectorPlugin implements Plugin, AbbreviationCollector
 	private function process($text)
 	{
 		return preg_replace_callback(
-			'@(?<=^|\n)\*\[(?<name>.+?)][ ]*:[ ]*(?<def>.+)(?=\n|$)@x',
+			'@(^|\n)\*\[(?<name>.+?)][ ]*:[ ]*(?<def>.+)(?=\n|$)@x',
 			function($match) { $this->save($match['name'], $match['def']); },
 			$text
 		);
