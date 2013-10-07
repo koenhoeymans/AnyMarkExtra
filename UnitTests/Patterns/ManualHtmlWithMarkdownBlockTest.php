@@ -30,7 +30,7 @@ foo
 ";
 
 		$div = new \ElementTree\ElementTreeElement('div');
-		$div->append($div->createText("\n\nfoo\n\n"));
+		$div->append($div->createText("\nfoo\n"));
 
 		$this->assertEquals($div->toString(), $this->applyPattern($text)->toString());
 	}
