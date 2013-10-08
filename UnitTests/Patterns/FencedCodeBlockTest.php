@@ -54,13 +54,33 @@ class AnyMarkExtra_Patterns_FencedCodeBlockTest extends \AnyMark\UnitTests\Suppo
 	/**
 	 * @test
 	 */
-	public function canContainEmptyLines()
+	public function linebreaksBeforeCodeAreReplacedByBreakElements()
 	{
-		$text = "\n\n~~~\n\n\nthe code\n\n~~~\n\n";
+		$text = "\n\n~~~\n\n\nthe code\n~~~\n\n";
 
-		$this->assertEquals(
-			$this->createFromText('the code'), $this->applyPattern($text)
-		);
+		$pre = $this->elementTree()->createElement('pre');
+		$code = $this->elementTree()->createElement('code');
+		$pre->append($code);
+		$code->append($this->elementTree()->createElement('br'));
+		$code->append($this->elementTree()->createElement('br'));
+		$code->append($this->elementTree()->createText("the code\n"));
+
+		$this->assertEquals($pre->toString(), $this->applyPattern($text)->toString());
+	}
+
+	/**
+	 * @test
+	 */
+	public function linebreaksAfterCodeAreLeftAsIs()
+	{
+		$text = "\n\n~~~\nthe code\n\n\n~~~\n\n";
+
+		$pre = $this->elementTree()->createElement('pre');
+		$code = $this->elementTree()->createElement('code');
+		$pre->append($code);
+		$code->append($this->elementTree()->createText("the code\n\n\n"));
+
+		$this->assertEquals($pre->toString(), $this->applyPattern($text)->toString());
 	}
 
 	/**

@@ -21,9 +21,9 @@ class FencedCodeBlock extends Code
 			(?<=\n|^)
 
 			~{3,}(?<attr>.+)?
-			\n+
+			\n
 			(?<code>(\n|.)+?)
-			\n+
+			\n
 			~{3,}
 
 			(?=\n|$)
@@ -36,6 +36,8 @@ class FencedCodeBlock extends Code
 		$code = $this->createCodeReplacement($match['code'] . "\n", true, $parent);
 
 		$this->addAttributes($code->getChildren()[0], $match['attr']);
+
+		$this->adjustWhiteSpaceBefore($code);
 
 		return $code;
 	}
@@ -106,5 +108,24 @@ class FencedCodeBlock extends Code
 		preg_match_all($regex, $attrMatch, $matches);
 
 		return $matches['class'];
+	}
+
+	private function adjustWhitespaceBefore(Element $pre)
+	{
+		$code = $pre->getChildren()[0];
+		$text = $code->getChildren()[0];
+		$value = $text->getValue();
+		preg_match("@^\n+@", $value, $matches);
+		if (!empty($matches))
+		{
+			$code->remove($text);
+			for ($i=0; $i<strlen($matches[0]); $i++)
+			{
+				$code->append($pre->createElement('br'));
+			}
+			$code->append(
+				$pre->createText(preg_replace('@^' . $matches[0] . '@', '', $value))
+			);
+		}
 	}
 }
