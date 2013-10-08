@@ -126,7 +126,7 @@ class AnyMarkExtra implements Plugin
 			->first();
 		$config
 			->add('fencedCodeBlock')
-			->toAlias('block')
+			->toParent('block')
 			->first();
 		$config
 			->add('abbreviation')
