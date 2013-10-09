@@ -26,7 +26,7 @@ class FencedCodeBlock extends Code
 			\n
 			~{3,}
 
-			(?=\n|$)
+			(?=\n\n|$)
 		@x';
 	}
 

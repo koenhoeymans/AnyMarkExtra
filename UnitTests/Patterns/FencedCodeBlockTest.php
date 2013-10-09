@@ -54,6 +54,31 @@ class AnyMarkExtra_Patterns_FencedCodeBlockTest extends \AnyMark\UnitTests\Suppo
 	/**
 	 * @test
 	 */
+	public function endsWithBlankLineAfter()
+	{
+		$text = "
+
+~~~~
+In code block
+~~~
+Still in code block
+~~~~~
+Still in code block
+~~~~
+
+";
+		$code = "In code block
+~~~
+Still in code block
+~~~~~
+Still in code block";
+
+		$this->assertEquals($this->createFromText($code), $this->applyPattern($text));
+	}
+
+	/**
+	 * @test
+	 */
 	public function linebreaksBeforeCodeAreReplacedByBreakElements()
 	{
 		$text = "\n\n~~~\n\n\nthe code\n~~~\n\n";
