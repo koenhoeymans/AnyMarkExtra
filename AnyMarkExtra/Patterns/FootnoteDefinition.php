@@ -31,13 +31,6 @@ class FootnoteDefinition extends Pattern implements Plugin, FootnoteDefinitionCo
 
 	public function register(EventMapper $mapper)
 	{
-		$mapper
-			->registerForEvent(
-				'BeforeParsingEvent',
-				function(BeforeParsingEvent $event) {
-					$event->setText($this->adjustDefinitionMarks($event->getText()));
-				})
-			->first();
 		$mapper->registerForEvent(
 				'AfterParsingEvent',
 				function(AfterParsingEvent $event) {
@@ -62,7 +55,7 @@ class FootnoteDefinition extends Pattern implements Plugin, FootnoteDefinitionCo
 					. $match['def'];
 			},
 			$text
-		);		
+		);
 	}
 
 	/**
