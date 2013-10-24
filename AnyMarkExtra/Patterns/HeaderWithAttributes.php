@@ -19,9 +19,9 @@ class HeaderWithAttributes extends \AnyMark\Pattern\Patterns\Header
 		'@
 		(?<=^|\n)
 		(?<setext>
-			([ ]{0,3}(?<pre>[-=+*^#]{3,})\n)?
-			[ ]{0,3}(?<text>\S.*?)(?<attr>\s+{.+})?\n
-			[ ]{0,3}(?<post>[-=+*^#]{3,})
+			((?<pre>[-=+*^#]{3,})\n)?
+			(?<text>\S.*?)(?<attr>\s+{.+})?\n
+			(?<post>[-=+*^#]{3,})
 		)
 		(?=\n|$)
 
@@ -29,7 +29,7 @@ class HeaderWithAttributes extends \AnyMark\Pattern\Patterns\Header
 
 		(?<=^|\n)
 		(?<atx>(?J)
-			[ ]{0,3}(?<level>[#]{1,6})[ ]?
+			(?<level>[#]{1,6})[ ]?
 			(?<text>[^\n]+?)
 			([ ]?[#]*)
 			(?<attr>\s+{.+})?
