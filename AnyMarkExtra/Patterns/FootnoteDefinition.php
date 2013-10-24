@@ -44,20 +44,6 @@ class FootnoteDefinition extends Pattern implements Plugin, FootnoteDefinitionCo
 		return $this->regex;
 	}
 
-	private function adjustDefinitionMarks($text)
-	{
-		return preg_replace_callback(
-			$this->regex,
-			function($match) {
-				$this->knownIds[] = $match['marker'];
-				return '{^' . $match['marker'] . '}:'
-					. $match['spacing_after_marker']
-					. $match['def'];
-			},
-			$text
-		);
-	}
-
 	/**
 	 * @see \AnyMarkExtra\Patterns\FootnoteDefinitionCollection::definitionExists()
 	 */
