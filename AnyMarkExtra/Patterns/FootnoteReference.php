@@ -19,20 +19,6 @@ class FootnoteReference extends Pattern implements Plugin
 {
 	private $collection;
 
-	/**
-	 * 'marker' => firstOccurenceNumber
-	 * 
-	 * @var array
-	 */
-	private $uniqueCount = array();
-
-	/**
-	 * 'marker' => occurenceNumber
-	 * 
-	 * @var array
-	 */
-	private $occurenceCount = array();
-
 	public function __construct(FootnoteDefinitionCollection $collection)
 	{
 		$this->collection = $collection;
@@ -43,9 +29,8 @@ class FootnoteReference extends Pattern implements Plugin
 		$mapper->registerForEvent(
 			'AfterParsingEvent',
 			function(AfterParsingEvent $event) {
-				$this->renumberReference($event->getTree());
-			}
-		);
+				$this->renumber($event->getTree());
+			});
 	}
 
 	public function getRegex()
@@ -60,50 +45,73 @@ class FootnoteReference extends Pattern implements Plugin
 		{
 			return;
 		}
-		if (isset($this->occurenceCount[$match['marker']]))
-		{
-			$this->occurenceCount[$match['marker']]++;
-			$occurenceCount = $this->occurenceCount[$match['marker']];
-		}
-		else
-		{
-			$this->occurenceCount[$match['marker']] = 1;
-			$this->uniqueCount[$match['marker']] = count($this->uniqueCount) + 1;
-			$occurenceCount = '';
-		}
 
 		$sup = $parent->createElement('sup');
-		$sup->setAttribute('id', 'fnref' . $occurenceCount . ':' . $match['marker']);
+		$sup->setAttribute('id', 'fnref:' . $match['marker']);
 		$a = $parent->createElement('a');
 		$a->setAttribute('href', '#fn:' . $match['marker']);
 		$a->setAttribute('rel', 'footnote');
-		$a->append($parent->createText($this->uniqueCount[$match['marker']]));
+		$a->append($parent->createText('1'));
 		$sup->append($a);
 
 		return $sup;
 	}
 
-	private function renumberReference(ElementTree $tree)
+	private function renumber(ElementTree $tree)
 	{
-		$count = 1;
+		$uniqueCount = 1;
+		$refsAlreadyCounted = array(); // #fnref:reference => total unique before
+		$occurenceCount = array(); // #fnref:reference => occurence count
 
+		foreach ($this->getAllReferences($tree) as $fnRef)
+		{
+			$refTxt = $fnRef->getChildren()[0];
+			$fnRef->remove($refTxt);
+			$reference = $fnRef->getAttributeValue('href');
+			if (!isset($refsAlreadyCounted[$reference]))
+			{
+				$fnRef->append($fnRef->createText($uniqueCount));
+				$refsAlreadyCounted[$reference] = $uniqueCount;
+				$uniqueCount++;
+
+				# if definition with reference inside came before reference in
+				# text it will be placed at the end and should have eg id=fnref2:
+				$fnRef->getParent()->setAttribute(
+					'id', 'fnref:' . substr($reference, 4)
+				);
+				$occurenceCount[$reference] = 1;
+			}
+			else
+			{
+				$fnRef->append($fnRef->createText($refsAlreadyCounted[$reference]));
+
+				# see remark above about references in definitions
+				$occurenceCount[$reference] = $occurenceCount[$reference] +1;
+				$fnRef->getParent()->setAttribute(
+					'id',
+					'fnref' . $occurenceCount[$reference] . ':' . substr($reference, 4)
+				);
+			}
+		}
+	}
+
+	private function getAllReferences(ElementTree $tree)
+	{
 		$query = $tree->createQuery();
 		$fnRefs = $query->find($query->allElements($query->lAnd(
 			$query->withParentElement($query->withName('sup')),
 			$query->withName('a')
 		)));
-		foreach ($fnRefs as $fnRef)
+
+		foreach ($fnRefs as $key => $fnRef)
 		{
 			$id = $fnRef->getParent()->getAttributeValue('id');
-			if (!$id || (substr($id, 0, 6) !== 'fnref:'))
+			if (!$id || (substr($id, 0, 5) !== 'fnref'))
 			{
-				continue;
+				unset($fnRefs[$key]);
 			}
-
-			$refTxt = $fnRef->getChildren()[0];
-			$fnRef->remove($refTxt);
-			$fnRef->append($fnRef->createText($count));
-			$count++;
 		}
+
+		return $fnRefs;
 	}
 }

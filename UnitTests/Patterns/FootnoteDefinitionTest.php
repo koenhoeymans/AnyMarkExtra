@@ -28,7 +28,7 @@ class AnyMarkExtra_Patterns_FootnoteDefinitionTest extends \AnyMark\UnitTests\Su
 	/**
 	 * @test
 	 */
-	public function collectsAllFootnotesInTextBeforeParsing()
+	public function collectsFootnotesInText()
 	{
 		$text = 'paragraph
 
@@ -36,12 +36,9 @@ class AnyMarkExtra_Patterns_FootnoteDefinitionTest extends \AnyMark\UnitTests\Su
 [^this]: that
 
 paragraph';
-		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
-		$event = new \AnyMark\Events\BeforeParsing($text);
-		$callback($event);
+		$this->applyPattern($text);
 
 		$this->assertTrue($this->def->definitionExists('foo'));
-		$this->assertTrue($this->def->definitionExists('this'));
 	}
 
 	/**
@@ -120,9 +117,6 @@ paragraph';
     bar
 
 paragraph';
-		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
-		$event = new \AnyMark\Events\BeforeParsing($text);
-		$callback($event);
 
 		$this->assertEquals(
 			"\n\nbar",
@@ -163,6 +157,8 @@ regular paragraph';
 
 paragraph';
 
+		$this->applyPattern($text);
+
 		$div = new \ElementTree\ElementTreeElement('div');
 		$p = $div->createElement('p');
 		$div->append($p);
@@ -184,10 +180,6 @@ paragraph';
 		$p->append($div->createText('bar'));
 		$li->append($p);
 
-		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
-		$event = new \AnyMark\Events\BeforeParsing($text);
-		$callback($event);
-
 		$event = new \AnyMark\Events\AfterParsing($div);
 		$callback = $this->eventMapper->getCallback('AfterParsingEvent');
 		$callback($event);
@@ -206,9 +198,8 @@ paragraph';
 		$text = 'paragraph
 
 [^1$^!"\']: Bar!';
-		$callback = $this->eventMapper->getCallback('BeforeParsingEvent');
-		$event = new \AnyMark\Events\BeforeParsing($text);
-		$callback($event);
+
+		$this->applyPattern($text);
 
 		$this->assertTrue($this->def->definitionExists('1$^!"\''));
 	}

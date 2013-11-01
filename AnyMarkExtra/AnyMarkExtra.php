@@ -29,9 +29,6 @@ class AnyMarkExtra implements Plugin
 			}
 		);
 
-		$this->abbreviationCollector = new \AnyMarkExtra\Patterns\AbbreviationCollectorPlugin();
-		$this->abbreviationCollector->register($mapper);
-
 		$this->footnoteDefinition = new \AnyMarkExtra\Patterns\FootnoteDefinition();
 		$this->footnoteReference = new \AnyMarkExtra\Patterns\FootnoteReference($this->footnoteDefinition);
 		$this->footnoteDefinition->register($mapper);
@@ -56,7 +53,8 @@ class AnyMarkExtra implements Plugin
 			'definitionDescription', new \AnyMarkExtra\Patterns\DefinitionDescription()
 		);
 		$config->setImplementation(
-			'abbreviation', new \AnyMarkExtra\Patterns\Abbreviation($this->abbreviationCollector)
+			'abbreviation',
+			new \AnyMarkExtra\Patterns\Abbreviation(new \AnyMarkExtra\Patterns\AbbreviationDefinition())
 		);
 		$config->setImplementation(
 			'emphasis', new \AnyMarkExtra\Patterns\Emphasis()
@@ -129,6 +127,10 @@ class AnyMarkExtra implements Plugin
 			->toParent('block')
 			->first();
 		$config
+			->add('fencedCodeBlock')
+			->toParent('textualList')
+			->first();
+		$config
 			->add('abbreviation')
 			->toAlias('inline')
 			->last();
@@ -137,12 +139,12 @@ class AnyMarkExtra implements Plugin
 			->toAlias('inline')
 			->before('hyperlink');
 		$config
-			->add('footnoteDefinition')
-			->toAlias('block')
-			->first();
-		$config
 			->add('block')
 			->toParent('footnoteDefinition')
 			->first();
+		$config
+			->add('footnoteDefinition')
+			->toAlias('block')
+			->after('fencedCodeBlock');
 	}
 }

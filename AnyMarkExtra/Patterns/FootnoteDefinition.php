@@ -60,6 +60,7 @@ class FootnoteDefinition extends Pattern implements Plugin, FootnoteDefinitionCo
 		$li->setAttribute('footnoteDef', 'true');
 		$li->setAttribute('id', 'fn:' . $match['marker']);
 		$li->append($parent->createText("\n\n" . $content));
+		$this->knownIds[] = $match['marker'];
 
 		return $li;
 	}
