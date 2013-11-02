@@ -33,6 +33,10 @@ class AnyMarkExtra implements Plugin
 		$this->footnoteReference = new \AnyMarkExtra\Patterns\FootnoteReference($this->footnoteDefinition);
 		$this->footnoteDefinition->register($mapper);
 		$this->footnoteReference->register($mapper);
+
+		$this->abbreviationDefinition = new \AnyMarkExtra\Patterns\AbbreviationDefinition();
+		$this->abbreviation = new \AnyMarkExtra\Patterns\Abbreviation($this->abbreviationDefinition);
+		$this->abbreviationDefinition->register($mapper);
 	}
 
 	private function addPatterns(EditPatternConfigurationEvent $config)
@@ -53,8 +57,10 @@ class AnyMarkExtra implements Plugin
 			'definitionDescription', new \AnyMarkExtra\Patterns\DefinitionDescription()
 		);
 		$config->setImplementation(
-			'abbreviation',
-			new \AnyMarkExtra\Patterns\Abbreviation(new \AnyMarkExtra\Patterns\AbbreviationDefinition())
+			'abbreviation',	$this->abbreviation
+		);
+		$config->setImplementation(
+			'abbreviationDefinition', $this->abbreviationDefinition
 		);
 		$config->setImplementation(
 			'emphasis', new \AnyMarkExtra\Patterns\Emphasis()
@@ -134,6 +140,10 @@ class AnyMarkExtra implements Plugin
 			->add('abbreviation')
 			->toAlias('inline')
 			->last();
+		$config
+			->add('abbreviationDefinition')
+			->toAlias('block')
+			->after('fencedCodeBlock');
 		$config
 			->add('footnoteReference')
 			->toAlias('inline')
