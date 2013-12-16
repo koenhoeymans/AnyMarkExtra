@@ -11,7 +11,8 @@
 		"php": ">=5.4.6",
 		"fjor/fjor": "~0.1.5",
 		"elementtree/elementtree": "~0.3.4",
-		"anymark/anymark": "~0.9.6",
+		"anymark/anymark": "~0.10.0",
+		"comparify/comparify": "~0.0.4",
 		"epa/epa": "~0.2.4"
 	},
 	"require-dev": {

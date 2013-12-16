@@ -80,10 +80,21 @@ class AnyMarkExtra implements Plugin
 		$config->setImplementation(
 			'manualHtmlBlock', new \AnyMarkExtra\Patterns\ManualHtmlWithMarkdownBlock()
 		);
+		$config->setImplementation(
+			'manualHtmlInline', new \AnyMarkExtra\Patterns\ManualHtmlWithMarkdownInline()
+		);
+		$config
+			->add('manualHtmlBlock')
+			->toAlias('block')
+			->first();
 		$config
 			->add('block')
 			->toParent('manualHtmlBlock')
 			->last();
+		$config
+			->add('manualHtmlInline')
+			->toAlias('inline')
+			->first();
 		$config
 			->add('definitionList')
 			->toParent('root')

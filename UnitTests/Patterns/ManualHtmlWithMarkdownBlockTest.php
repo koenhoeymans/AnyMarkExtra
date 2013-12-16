@@ -24,14 +24,35 @@ class AnyMarkExtra_Patterns_ManualHtmlWithMarkdownBlockTest extends \AnyMark\Uni
 		$text = "
 
 <div markdown=\"1\">
+
+foo
+
+</div>
+
+";
+
+		$div = $this->elementTree()->createElement('div');
+		$div->append($div->createText("\n\nfoo\n\n"));
+
+		$this->assertEquals($div, $this->applyPattern($text));
+	}
+
+	/**
+	 * @test
+	 */
+	public function addsWhitespace()
+	{
+		$text = "
+
+<div markdown=\"1\">
 foo
 </div>
 
 ";
 
-		$div = new \ElementTree\ElementTreeElement('div');
-		$div->append($div->createText("\nfoo\n"));
+		$div = $this->elementTree()->createElement('div');
+		$div->append($div->createText("\n\nfoo\n"));
 
-		$this->assertEquals($div->toString(), $this->applyPattern($text)->toString());
+		$this->assertEquals($div, $this->applyPattern($text));
 	}
 }
