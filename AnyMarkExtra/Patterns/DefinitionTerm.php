@@ -17,9 +17,9 @@ class DefinitionTerm extends Pattern
 	{
 		return
 			'@
-			(?<=\n\n|^)
+			(?<=\n\n|^\n|^)
 
-			(?<term>[ ]{0,3}[^:\n\s].+)
+			(?<term>[ ]{0,3}[^:\n\s][^\n]+)
 			
 			(?=
 				(\n[ ]{0,3}\S.*)*				# other dt

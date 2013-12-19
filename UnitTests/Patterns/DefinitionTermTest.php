@@ -92,4 +92,20 @@ para';
 
 		$this->assertEquals($this->createDt('term a'), $this->applyPattern($text));
 	}
+
+	/**
+	 * @test
+	 */
+	public function multipleTermsCanHaveBlankLineBeforeDefinition()
+	{
+		$text =
+		'
+term y
+
+:	explanation
+
+para';
+		
+		$this->assertEquals($this->createDt('term y'), $this->applyPattern($text));
+	}
 }
