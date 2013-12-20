@@ -66,22 +66,4 @@ class AnyMarkExtra_Patterns_FootnoteReferenceTest extends \AnyMark\UnitTests\Sup
 
 		$this->assertEquals(null, $this->applyPattern($text));
 	}
-
-	/**
-	 * @test
-	 */
-	public function reusesFootnoteMarkersOnSameReferences()
-	{
-		$this->collection
-			->expects($this->atLeastOnce())
-			->method('definitionExists')
-			->with('foo')
-			->will($this->returnValue(true));
-
-		$text = "Footnote.[^foo]\n\nOther.[^foo]";
-		$this->applyPattern($text);
-		$output = '<sup id="fnref2:foo"><a href="#fn:foo" rel="footnote">1</a></sup>';
-
-		$this->assertEquals($output, $this->applyPattern('Other.[^foo]')->toString());		
-	}
 }
