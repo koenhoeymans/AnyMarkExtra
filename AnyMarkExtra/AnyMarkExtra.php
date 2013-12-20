@@ -77,12 +77,6 @@ class AnyMarkExtra implements Plugin
 		$config->setImplementation(
 			'header', new \AnyMarkExtra\Patterns\HeaderWithAttributes()
 		);
-		$config->setImplementation(
-			'manualHtmlBlock', new \AnyMarkExtra\Patterns\ManualHtmlWithMarkdownBlock()
-		);
-		$config->setImplementation(
-			'manualHtmlInline', new \AnyMarkExtra\Patterns\ManualHtmlWithMarkdownInline()
-		);
 		$config
 			->add('manualHtmlBlock')
 			->toAlias('block')
